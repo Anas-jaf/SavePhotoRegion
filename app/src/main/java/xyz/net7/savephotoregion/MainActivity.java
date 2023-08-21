@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
 
 //    اضف هذه الدالة انا من عندي
     public void sendGetRequest() {
-        String ipAddress = binding.ipAddressInput2.getText().toString();
+        String ipAddress = binding.ipAddressInput.getText().toString();
         String port = "8000"; // Change this to your desired port number
         String url = "http://" + ipAddress + ":" + port;
         Request request = new Request.Builder()
