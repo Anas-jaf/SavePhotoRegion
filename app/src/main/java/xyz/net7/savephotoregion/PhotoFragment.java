@@ -15,9 +15,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -42,11 +44,22 @@ import java.util.Date;
 import java.util.List;
 
 
+import android.widget.Toast;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import xyz.net7.savephotoregion.databinding.FragmentPhotoBinding;
 
 
 public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 
+    private OkHttpClient httpClient;
     private FragmentPhotoBinding binding;
     Camera camera;
     SurfaceView surfaceView;
@@ -85,6 +98,8 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 //        ButterKnife.bind(this, view)    ;
         binding = FragmentPhotoBinding.inflate(getLayoutInflater());
         context = getContext();
+
+        httpClient = new OkHttpClient();   // اضفت هذا السطر
 
         surfaceView = (SurfaceView) binding.cameraPreviewSurface;
         surfaceHolder = surfaceView.getHolder();
@@ -344,12 +359,44 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                     });
             Toast.makeText(context, file.getName(), Toast.LENGTH_SHORT).show();
 
+            sendGetRequest();
+
         } catch (Exception e) {
             // Unable to create file, likely because external storage is
             // not currently mounted.
             Log.w("ExternalStorage", "Error writing " + file, e);
         }
     }
+
+    public void sendGetRequest() {
+//        String ipAddress = binding.ipAddressInput.getText().toString();
+        String ipAddress = "192.168.1.101" ;
+        String port = "8000"; // Change this to your desired port number
+        String url = "http://" + ipAddress + ":" + port;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, @NonNull Response response) throws IOException {
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Successfull request", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+    }
+
 }
 
 
