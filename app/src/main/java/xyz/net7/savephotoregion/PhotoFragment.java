@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,8 +52,10 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import xyz.net7.savephotoregion.databinding.FragmentPhotoBinding;
@@ -359,7 +363,8 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                     });
             Toast.makeText(context, file.getName(), Toast.LENGTH_SHORT).show();
 
-            sendGetRequest();
+//            sendGetRequest();
+            sendPostRequest(bitmap);
 
         } catch (Exception e) {
             // Unable to create file, likely because external storage is
@@ -395,6 +400,54 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
             }
         });
 
+    }
+
+    public void sendPostRequest(Bitmap bitmap) {
+        String ipAddress = "192.168.1.101";
+        String port = "8000"; // Change this to your desired port number
+        String url = "http://" + ipAddress + ":" + port;
+
+        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"); // Use the appropriate media type
+        String requestBody =  convert_Bitmat2Base64(bitmap) ;
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create(mediaType, requestBody))
+                .build();
+
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, @NonNull Response response) throws IOException {
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (response.isSuccessful()) {
+                            Toast.makeText(getContext(), "Successful request", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Request failed: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    public  String convert_Bitmat2Base64(Bitmap bitmap){
+        // Convert bitmap to byte array
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        // Convert byte array to base64 data
+        String base64Data = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        return  base64Data;
     }
 
 }
