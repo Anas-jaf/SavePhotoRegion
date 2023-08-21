@@ -8,12 +8,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import xyz.net7.savephotoregion.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements PhotoFragment.OnFragmentInteractionListener {
 
-    private ActivityMainBinding binding ;
+    public ActivityMainBinding binding ;
+
+
     int PERMISSION_ALL = 1;
     boolean flagPermissions = false;
 
@@ -30,6 +33,10 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
         setContentView(binding.getRoot());
         checkPermissions();
         binding.makePhotoButton.setOnClickListener(view -> onClickScanButton());
+
+
+
+
 
     }
 

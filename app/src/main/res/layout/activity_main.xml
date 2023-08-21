@@ -21,6 +21,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Photo!" />
+            <EditText
+                android:id="@+id/et_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="ip addr"
+                android:textColor="@color/colorAccent"/>
+
+            <CheckBox
+                android:id="@+id/cb_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Save IP"
+                android:textColor="@color/colorAccent"/>
         </LinearLayout>
 
         <LinearLayout

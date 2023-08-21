@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,15 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+import java.io.ByteArrayOutputStream;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 import xyz.net7.savephotoregion.databinding.FragmentPhotoBinding;
@@ -47,7 +57,9 @@ import xyz.net7.savephotoregion.databinding.FragmentPhotoBinding;
 
 public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 
+    private EditText editText_ip;
     private FragmentPhotoBinding binding;
+    private FragmentPhotoBinding binding_tw;
     Camera camera;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
@@ -75,6 +87,7 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setRetainInstance(true);
+
     }
 
     @Override
@@ -84,6 +97,8 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 //        View view = inflater.inflate(R.layout.fragment_photo, container, false);
 //        ButterKnife.bind(this, view)    ;
         binding = FragmentPhotoBinding.inflate(getLayoutInflater());
+
+
         context = getContext();
 
         surfaceView = (SurfaceView) binding.cameraPreviewSurface;
@@ -343,6 +358,20 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                         }
                     });
             Toast.makeText(context, file.getName(), Toast.LENGTH_SHORT).show();
+            ////////////////////////
+            // Convert bitmap to byte array
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+// Convert byte array to base64 data
+            String base64Data = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            ////////////////////////////////
+//            Toast.makeText(context,base64Encoded,Toast.LENGTH_LONG).show();
+            Log.i("base64",base64Data);
+            // Set up the OkHttpClient
+
+
 
         } catch (Exception e) {
             // Unable to create file, likely because external storage is
@@ -351,6 +380,8 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
         }
     }
 }
+
+
 
 
 
