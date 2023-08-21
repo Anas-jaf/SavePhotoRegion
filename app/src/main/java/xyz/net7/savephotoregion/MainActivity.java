@@ -2,6 +2,7 @@ package xyz.net7.savephotoregion;
 
 import android.content.Context;
 
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -24,11 +25,11 @@ import xyz.net7.savephotoregion.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements PhotoFragment.OnFragmentInteractionListener {
 
-    private ActivityMainBinding binding ;
+    public ActivityMainBinding binding ;
 
     private EditText ipAddressInput;
     private OkHttpClient httpClient;
-
+    public SharedPreferences sharedPreferences;
     int PERMISSION_ALL = 1;
     boolean flagPermissions = false;
 
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.CAMERA
     };
+    public static final String KEY_USERNAME = "username";
+    public static final String PREF_NAME = "MyPrefs";
+
 
 
     @Override
@@ -48,11 +52,16 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
         binding.makePhotoButton.setOnClickListener(view -> onClickScanButton());   // اضفت هذا السطر
         binding.requestButton.setOnClickListener(view -> sendGetRequest());  // اضفت هذا السطر
 
+        sharedPreferences  = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+         String savedUsername = sharedPreferences.getString(KEY_USERNAME, "");
+        binding.etIpadrr.setText(savedUsername);
+
+
     }
 
 //    اضف هذه الدالة انا من عندي
     public void sendGetRequest() {
-        String ipAddress = binding.ipAddressInput2.getText().toString();
+        String ipAddress = binding.etIpadrr.getText().toString();
         String port = "8000"; // Change this to your desired port number
         String url = "http://" + ipAddress + ":" + port;
         Request request = new Request.Builder()
@@ -91,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
                 .replace(R.id.res_photo_layout, new PhotoFragment())
                 .addToBackStack(null)
                 .commit();
+        saveUsername();
     }
 
     void checkPermissions() {
@@ -128,4 +138,14 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
                     .commit();
         }
     }
+
+    private void saveUsername() {
+
+        String username = binding.etIpadrr.getText().toString();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_USERNAME, username);
+        editor.apply();
+    }
+
 }
+
