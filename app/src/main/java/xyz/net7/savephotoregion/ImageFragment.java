@@ -5,11 +5,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.ByteArrayOutputStream;
 
 import xyz.net7.savephotoregion.databinding.FragmentImageBinding;
 
@@ -49,6 +52,16 @@ public class ImageFragment extends Fragment {
             binding.resPhoto.setImageBitmap(bitmap);
             String info = "image with:" + bitmap.getWidth() + "\n" + "image height:" + bitmap.getHeight();
             binding.resPhotoSize.setText(info);
+            //
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+// Convert byte array to base64 data
+            String base64Data = Base64.encodeToString(byteArray, Base64.DEFAULT);
+//            ////////////////////////////////
+//            SendBase64DataTask task = new SendBase64DataTask(base64Data);
+//            task.execute();
         }
 //        return view;
         return binding.getRoot() ;
