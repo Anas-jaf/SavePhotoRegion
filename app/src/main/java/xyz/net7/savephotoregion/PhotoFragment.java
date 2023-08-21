@@ -51,6 +51,7 @@ import java.util.List;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -407,13 +408,16 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
     }
 
     public void sendPostRequest(Bitmap bitmap) {
-        MainActivity m= new MainActivity();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String ip = settings.getString("username", "");
+//        MainActivity m= new MainActivity();
+//        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+//        String ip = settings.getString("username", "");
+
+        SharedPreferences mPrefs = Objects.requireNonNull(this.getContext()).getSharedPreferences("MyPrefs",0);
+        String ip = mPrefs.getString("username", "");
+
         Log.v("ip",ip);
-        String ipAddress = ip;
         String port = "8000"; // Change this to your desired port number
-        String url = "http://" + ipAddress + ":" + port;
+        String url = "http://" + ip + ":" + port;
 
         MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"); // Use the appropriate media type
         String requestBody =  convert_Bitmat2Base64(bitmap) ;
@@ -446,6 +450,9 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
         });
     }
 
+    public static SharedPreferences getPrefs(Context context){
+        return context.getSharedPreferences("prefs",Context.MODE_PRIVATE);
+    }
 
     public  String convert_Bitmat2Base64(Bitmap bitmap){
         // Convert bitmap to byte array
@@ -460,8 +467,6 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 
 
 }
-
-
 
 
 

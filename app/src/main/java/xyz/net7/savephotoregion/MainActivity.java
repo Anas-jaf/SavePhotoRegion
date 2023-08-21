@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
         binding.requestButton.setOnClickListener(view -> sendGetRequest());  // اضفت هذا السطر
 
         sharedPreferences  = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-         String savedUsername = sharedPreferences.getString(KEY_USERNAME, "");
+        String savedUsername = sharedPreferences.getString(KEY_USERNAME, "");
         binding.etIpadrr.setText(savedUsername);
 
 
