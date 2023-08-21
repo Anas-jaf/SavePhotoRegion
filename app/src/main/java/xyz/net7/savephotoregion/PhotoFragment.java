@@ -4,6 +4,7 @@ package xyz.net7.savephotoregion;
 import android.content.Context;
 
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -102,6 +104,8 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
 //        ButterKnife.bind(this, view)    ;
         binding = FragmentPhotoBinding.inflate(getLayoutInflater());
         context = getContext();
+
+
 
         httpClient = new OkHttpClient();   // اضفت هذا السطر
 
@@ -403,7 +407,11 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
     }
 
     public void sendPostRequest(Bitmap bitmap) {
-        String ipAddress = "192.168.1.101";
+        MainActivity m= new MainActivity();
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String ip = settings.getString("username", "");
+        Log.v("ip",ip);
+        String ipAddress = ip;
         String port = "8000"; // Change this to your desired port number
         String url = "http://" + ipAddress + ":" + port;
 
@@ -449,6 +457,7 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
         String base64Data = Base64.encodeToString(byteArray, Base64.DEFAULT);
         return  base64Data;
     }
+
 
 }
 
