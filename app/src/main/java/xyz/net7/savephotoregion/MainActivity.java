@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements PhotoFragment.OnF
             checkPermissions();
             return;
         }
+        binding.inputField.setVisibility(View.GONE);
+//        binding.inputField.removeView();
         //start photo fragment
         getSupportFragmentManager()
                 .beginTransaction()

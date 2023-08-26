@@ -285,7 +285,7 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                 matrix.postRotate(90);
                 Bitmap rotatedBitmap = Bitmap.createBitmap(bitmapPicture, 0, 0, bitmapPicture.getWidth(), bitmapPicture.getHeight(), matrix, true);
                 //save file
-                createImageFile(rotatedBitmap);
+//                createImageFile(rotatedBitmap);
 
                 //calculate aspect ratio
                 float koefX = (float) rotatedBitmap.getWidth() / (float) binding.previewLayout.getWidth();
@@ -308,6 +308,7 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                 //check limits and make crop
                 if (cropStartX + cropWidthX <= rotatedBitmap.getWidth() && cropStartY + cropHeightY <= rotatedBitmap.getHeight()) {
                     croppedBitmap = Bitmap.createBitmap(rotatedBitmap, cropStartX, cropStartY, cropWidthX, cropHeightY);
+                    croppedBitmap = Bitmap.createScaledBitmap(croppedBitmap, 700, 200, false);
                 } else {
                     croppedBitmap = null;
                 }
@@ -321,11 +322,11 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
                 // for Landscape mode
             }
 
-            //pass to another fragment
-            if (mListener != null) {
-                if (croppedBitmap != null)
-                    mListener.onFragmentInteraction(croppedBitmap);
-            }
+//            //pass to another fragment
+//            if (mListener != null) {
+//                if (croppedBitmap != null)
+//                    mListener.onFragmentInteraction(croppedBitmap);
+//            }
 
             if (camera != null) {
                 camera.startPreview();
@@ -419,7 +420,7 @@ public class PhotoFragment extends Fragment implements SurfaceHolder.Callback {
         String port = "8000"; // Change this to your desired port number
         String url = "http://" + ip + ":" + port;
 
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"); // Use the appropriate media type
+        MediaType mediaType = MediaType.parse("text/x-markdown; charset=utf-8"); // Use the appropriate media type
         String requestBody =  convert_Bitmat2Base64(bitmap) ;
 
 
